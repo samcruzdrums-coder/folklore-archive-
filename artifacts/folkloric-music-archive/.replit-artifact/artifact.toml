@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "World Folkloric Music Archive"
+description = "A searchable cultural archive for discovering traditional folkloric musics, instruments, regions, recordings, and community knowledge from around the world."
+version = "1.0.0"
+id = "artifacts/folkloric-music-archive"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22889
+
+[services.development]
+run = "pnpm --filter @workspace/folkloric-music-archive run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/folkloric-music-archive", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/folkloric-music-archive/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22889"
+BASE_PATH = "/"

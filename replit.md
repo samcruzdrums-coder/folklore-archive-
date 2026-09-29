@@ -1,6 +1,6 @@
-# [Project name]
+# World Folkloric Music Archive
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A discovery-first archive for exploring traditional folkloric music through recordings, regions, instruments, and cultural context.
 
 ## Run & Operate
 
@@ -22,15 +22,25 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/folkloric-music-archive/src/` — React + Vite frontend, routes, archive pages, and visual theme.
+- `artifacts/api-server/src/routes/recordings.ts` — archive API endpoints and read-only discovery filters.
+- `lib/api-spec/openapi.yaml` — source of truth for the archive API contract and generated client hooks.
+- `lib/db/src/schema/recordings.ts` — Drizzle schema for archive recordings.
+- `artifacts/folkloric-music-archive/public/archive-assets/` — generated editorial imagery used by seeded records.
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The first build is discovery-first and read-only: it establishes browse/search/detail patterns before adding contributor workflows or accounts.
+- API contracts are defined in OpenAPI and consumed through generated React Query hooks instead of handwritten client fetches.
+- Region and instrument summaries are derived from recording data so archive navigation stays consistent with the records users can browse.
+- Seeded archive imagery is local to the web artifact so the first preview does not depend on an external image service.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Browse featured and recent traditional music recordings.
+- Search by title, tradition, community, instrument, region, country, form, or tag.
+- Open a field-note style detail page with provenance, duration, community, and collection context.
+- Explore indexed regions and instruments from the archive.
 
 ## User preferences
 

@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: archive
+    description: Folkloric music archive discovery operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,115 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /recordings:
+    get:
+      operationId: listRecordings
+      tags: [archive]
+      summary: Browse archive recordings
+      description: Returns archive recordings with optional search and category filters.
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: region
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: instrument
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: form
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: featured
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 24
+      responses:
+        "200":
+          description: Matching recordings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Recording"
+  /recordings/{id}:
+    get:
+      operationId: getRecording
+      tags: [archive]
+      summary: Get a recording entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Recording entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recording"
+        "404":
+          description: Recording not found
+  /regions:
+    get:
+      operationId: listRegions
+      tags: [archive]
+      summary: List archive regions
+      responses:
+        "200":
+          description: Regions represented in the archive
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RegionSummary"
+  /instruments:
+    get:
+      operationId: listInstruments
+      tags: [archive]
+      summary: List archive instruments
+      responses:
+        "200":
+          description: Instruments represented in the archive
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InstrumentSummary"
+  /archive/summary:
+    get:
+      operationId: getArchiveSummary
+      tags: [archive]
+      summary: Get archive overview
+      responses:
+        "200":
+          description: Archive summary and featured story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArchiveSummary"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +144,100 @@ components:
           type: string
       required:
         - status
+    Recording:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        tradition:
+          type: string
+        region:
+          type: string
+        country:
+          type: string
+        community:
+          type: string
+        instrument:
+          type: string
+        form:
+          type: string
+        description:
+          type: string
+        yearCollected:
+          type: integer
+        duration:
+          type: string
+        source:
+          type: string
+        audioUrl:
+          type: ["string", "null"]
+        imageUrl:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        featured:
+          type: boolean
+      required:
+        - id
+        - title
+        - tradition
+        - region
+        - country
+        - community
+        - instrument
+        - form
+        - description
+        - yearCollected
+        - duration
+        - source
+        - audioUrl
+        - imageUrl
+        - tags
+        - featured
+    RegionSummary:
+      type: object
+      properties:
+        region:
+          type: string
+        count:
+          type: integer
+        countries:
+          type: integer
+      required:
+        - region
+        - count
+        - countries
+    InstrumentSummary:
+      type: object
+      properties:
+        instrument:
+          type: string
+        count:
+          type: integer
+      required:
+        - instrument
+        - count
+    ArchiveSummary:
+      type: object
+      properties:
+        recordingCount:
+          type: integer
+        regionCount:
+          type: integer
+        instrumentCount:
+          type: integer
+        traditionCount:
+          type: integer
+        featured:
+          $ref: "#/components/schemas/Recording"
+      required:
+        - recordingCount
+        - regionCount
+        - instrumentCount
+        - traditionCount
+        - featured
 
